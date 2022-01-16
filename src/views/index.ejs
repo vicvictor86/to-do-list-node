@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html lang="pt-Br">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/styles/pages/index.css">
-        <title>To do</title>
-    </head>
-    <body>
-        <div class="tdl-holder">
-            <h2>TO DO LIST - Node</h2>
-            <div class="tdl-content">
-                <ul>
-                    <li><label><input type="checkbox"><i></i><span>get up</span><a href='#'>–</a></label></li>
-                    <li><label><input type="checkbox" checked><i></i><span>stand up</span><a href='#'>–</a></label></li>
-                    <li><label><input type="checkbox"><i></i><span>don't give up the fight.</span><a href='#'>–</a></label></li>
-                    <li><label><input type="checkbox" checked><i></i><span>save the world.</span><a href='#'>–</a></label></li>
-                    <li><label><input type="checkbox"><i></i><span>do something else</span><a href='#'>–</a></label></li>
-                </ul>
-            </div>
-            <input type="text" class="tdl-new" placeholder="Write new item and hit 'Enter'...">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/pages/index.css">
+    <script src="/scripts/index.js"></script>
+    <title>To do</title>
+</head>
+
+<body>
+    <div class="tdl-holder">
+        <h2>Lista de afazeres - Node</h2>
+        <div class="tdl-content">
+            <ul>
+                <% tasks.forEach(task=> { %>
+                    <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
+                        <li>
+                            <label id="label<%= task.id %>">
+                                <div class="left-items">
+                                    <input name="check" type="checkbox" <% if(task.status=="Done" ){ %>
+                                        checked
+                                    <% } %> ><i class="selected-item"></i>
+                                    <div class="container-task-name">
+                                        <input class="task-name" name="taskName" id="taskName<%= task.id %>" value="<%= task.name %>" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="right-items">
+                                    <button type="button" id="button<%= task.id %>" class="edit-button"
+                                        onclick="editTask('<%= task.id %>')">Editar</button>
+                                    <button form="update-task<%= task.id %>" hidden type="submit">Salvar</button>
+
+                                    <button class="delete-button" type="submit" form="delete-task<%= task.id %>"></button>
+                                </div>
+                            </label>
+                        </li>
+                    </form>
+                    <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>"></form>
+                    <% }) %>
+            </ul>
         </div>
-    </body>
+        <form id="form-new-task" action="/" method="POST">
+            <input name="name" id="input-new-task" type="text" class="tdl-new"
+                placeholder="Digite sua tarefa e aperte enter.">
+        </form>
+    </div>
+</body>
+
 </html>
