@@ -1,18 +1,17 @@
 const Task = require("../model/Task");
 
 module.exports = {
-    index(req, res){
-        const tasks = Task.get();
+    async index(req, res){
+        const tasks = await Task.get();
         res.render("index", {tasks})
     },
-    create(req, res){
+
+    async create(req, res){
         const newTask = req.body;
-        const tasks = Task.get();
-        
+        const tasks = await Task.get();
         const lastOrder = tasks[tasks.length - 1]?.order || 1;
-        const lastId = tasks[tasks.length - 1]?.id || 1;
-        Task.create({
-            id: lastId + 1,
+
+        await Task.create({
             name: newTask.name,
             status: "ToDo",
             order: lastOrder + 1
@@ -20,12 +19,12 @@ module.exports = {
         res.redirect("/");
     },
 
-    update(req, res){
+    async update(req, res){
         const newTask = req.body;
         const taskId = req.params.id;
         
         newTask.status = newTask?.check === "on" ? "Done" : "ToDo";
-        Task.update({
+        await Task.update({
             id: taskId,
             name: newTask.taskName,
             status: newTask.status
@@ -34,9 +33,9 @@ module.exports = {
         res.redirect("/");
     },
 
-    delete(req, res){
+    async delete(req, res){
         const taskId = req.params.id;
-        Task.delete(taskId);
+        await Task.delete(taskId);
         res.redirect("/");
     }
 }

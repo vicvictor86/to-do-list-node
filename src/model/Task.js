@@ -1,59 +1,61 @@
-const ToDo = Symbol("ToDo");
-const Doing = Symbol("Doing");
-const Done = Symbol("Done");
-
-let tasks = [
-    {
-        id: 0,
-        name: "Levantar",
-        status: "Done",
-        order: 0
-    },
-    {
-        id: 1,
-        name: "Lavar o rosto",
-        status: "Doing",
-        order: 1
-    },
-    {
-        id: 2,
-        name: "Ligar o computador",
-        status: "ToDo",
-        order: 2
-    },
-];
+const Database = require("../db/config");
 
 module.exports = {
-    get(){
-        return tasks;
-    },
-    create(newTask){
-        tasks.push(newTask);
-    },
+    async get(){
+        const db = await Database();
+        
+        const tasks = await db.all(`SELECT * FROM task`);
 
-    update(taskUpdated){
-        tasks = tasks.map((task)=> {
-            if(Number(task.id) === Number(taskUpdated.id)){
-                if(!taskUpdated.name){
-                    taskUpdated.name = task.name;
-                }
-                
-                task = {
-                    ...task,
-                    name: taskUpdated.name,
-                    status: taskUpdated.status
-                }   
-            }
-
-            return task;
-        });
+        await db.close();
+        
+        return tasks.map(task => ({
+          id: task.id,
+          name: task.name,
+          status: task.status,
+          order: task.order_task  
+        }));
     },
 
-    delete(taskId){
-        tasks = tasks.filter((task)=>{
-            if(Number(task.id) !== Number(taskId)){
-                return task;
-            }
-        })
+    async create(newTask){
+        const db = await Database();
+        
+        await db.run(`
+            INSERT INTO task (
+                name, 
+                status, 
+                order_task
+            ) VALUES (
+                "${newTask.name}",
+                "${newTask.status}",
+                ${newTask.order}
+            );
+        )`);
+
+        await db.close();
+    },
+
+    async update(taskUpdated){
+        const db = await Database();
+        const task = await db.get(`SELECT * FROM task WHERE id = ${taskUpdated.id}`);        
+
+        if(!taskUpdated.name){
+            taskUpdated.name = task.name;
+        }
+
+        await db.run(`UPDATE task SET 
+            name = "${taskUpdated.name}",
+            status = "${taskUpdated.status}"
+            WHERE id = "${taskUpdated.id}"
+        `);
+
+        await db.close();
+    },
+
+    async delete(taskId){
+        const db = await Database();
+        
+        await db.run(`DELETE FROM task WHERE id = ${taskId}`);
+
+        await db.close();
     }
 }
