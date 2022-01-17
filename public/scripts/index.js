@@ -21,3 +21,7 @@ function editTask(taskid){
     })
 }
 
+function updateTask(taskId){
+    const form = document.getElementById("update-task" + taskId);
+    form.submit();
+}

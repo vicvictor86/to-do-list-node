@@ -20,7 +20,7 @@
                         <li>
                             <label id="label<%= task.id %>">
                                 <div class="left-items">
-                                    <input name="check" type="checkbox" <% if(task.status=="Done" ){ %>
+                                    <input name="check" type="checkbox" form="update-task<%= task.id %>" onclick="updateTask('<%= task.id %>')" <% if(task.status=="Done" ){ %>
                                         checked
                                     <% } %> ><i class="selected-item"></i>
                                     <div class="container-task-name">

@@ -19,6 +19,7 @@ module.exports = {
         });
         res.redirect("/");
     },
+
     update(req, res){
         const newTask = req.body;
         const taskId = req.params.id;
@@ -32,6 +33,7 @@ module.exports = {
     
         res.redirect("/");
     },
+
     delete(req, res){
         const taskId = req.params.id;
         Task.delete(taskId);

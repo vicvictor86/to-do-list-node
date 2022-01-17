@@ -30,9 +30,14 @@ module.exports = {
     create(newTask){
         tasks.push(newTask);
     },
+
     update(taskUpdated){
         tasks = tasks.map((task)=> {
             if(Number(task.id) === Number(taskUpdated.id)){
+                if(!taskUpdated.name){
+                    taskUpdated.name = task.name;
+                }
+                
                 task = {
                     ...task,
                     name: taskUpdated.name,
@@ -43,6 +48,7 @@ module.exports = {
             return task;
         });
     },
+
     delete(taskId){
         tasks = tasks.filter((task)=>{
             if(Number(task.id) !== Number(taskId)){

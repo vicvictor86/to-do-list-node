@@ -122,7 +122,7 @@ body{
 	z-index: 2;
 }
 
-.tdl-holder input[type="checkbox"]:checked ~ span{	
+.tdl-holder input[type="checkbox"]:checked ~ .container-task-name .task-name{	
 	color: #586186;
 	text-decoration: line-through;
 }
