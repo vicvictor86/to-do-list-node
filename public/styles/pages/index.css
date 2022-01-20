@@ -13,9 +13,28 @@ body{
 
 /* TO DO LIST
 ================================================== */
+
+header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #284eda;
+	height: 60px;
+	margin-bottom: 64px;
+}
+
+h1 {
+	font-size: 3rem;
+	color: whitesmoke;
+}
+
 .tdl-holder{
-	margin:0px auto;
-	width: 300px;
+	display: grid;
+  	grid-template-columns: 18% 18% 18%;
+	justify-content: center;
+	align-items: center;
+  	gap: 40px;
+  	padding: 10px;
 }
 
 .tdl-holder h2{
@@ -27,8 +46,8 @@ body{
 	font-size:16px;
 	font-weight: 100;
 	line-height: 56px;
-	padding-left: 15px;
 	margin:0;
+	text-align: center;
 }
 
 .tdl-holder ul, .tdl-holder li {

@@ -1,19 +1,25 @@
 const Database = require("../db/config");
+const ToDo = Symbol("ToDo");
+const Doing = Symbol("Doing");
+const Done = Symbol("Done");
 
 module.exports = {
     async get(){
         const db = await Database();
         
         const tasks = await db.all(`SELECT * FROM task`);
-
-        await db.close();
         
-        return tasks.map(task => ({
-          id: task.id,
-          name: task.name,
-          status: task.status,
-          order: task.order_task  
-        }));
+        await db.close();
+        return tasks;
+    },
+
+    async getById(id){
+        const db = await Database();
+        
+        const tasks = await db.get(`SELECT * FROM task WHERE id = ${id}`);
+        
+        await db.close();
+        return tasks;
     },
 
     async create(newTask){
@@ -57,5 +63,30 @@ module.exports = {
         await db.run(`DELETE FROM task WHERE id = ${taskId}`);
 
         await db.close();
-    }
+    },
+
+    taskPerType(tasks){
+        let toDo = [];
+        let doing = [];
+        let done = [];
+
+        tasks.forEach(task => {
+            switch(task.status.toLowerCase()){
+                case "todo":
+                    toDo.push(task);
+                    break;
+                case "doing":
+                    doing.push(task);
+                    break;
+                case "done":
+                    done.push(task);
+                    break;
+                default:
+                    console.log("Status inválido");
+            }
+        })
+    
+        const listPerType = {toDo, doing, done};
+        return listPerType;
+    },
 }
