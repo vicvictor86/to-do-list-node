@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/styles/pages/reset.css">
     <link rel="stylesheet" href="/styles/pages/index.css">
     <script src="/scripts/index.js"></script>
-    <title>To do</title>
+    <title>Lista de afazeres</title>
 </head>
 
 <body>
@@ -16,125 +16,56 @@
         <h1>Lista de afazeres - Node</h1>
     </header>
     <div class="tdl-holder">
-        <div class="to-do-painel">
-            <h2>Para fazer</h2>
-            <div class="tdl-content">
-                <ul>
-                    <% toDo.forEach(task=> { %>
-                        <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
-                            <li>
-                                <label id="label<%= task.id %>">
-                                    <div class="left-items">
-                                        <input name="check" type="checkbox" form="update-task<%= task.id %>"
-                                            onclick="updateTask('<%= task.id %>')" <% if(task.status=="done"){ %>
-                                        checked
-                                        <% } %> ><i class="selected-item"></i>
-                                            <div class="container-task-name">
-                                                <input class="task-name" name="taskName" id="taskName<%= task.id %>"
-                                                    value="<%= task.name %>" disabled>
+        <% types.forEach(type => { %>
+                <div class="to-do-painel">
+                    <h2><% if(type == "toDo"){ %> 
+                        Para fazer
+                    <% }else if(type == "doing"){ %> 
+                        Fazendo
+                    <% }else{ %> 
+                        Feito
+                    <% } %></h2>
+                    <div class="tdl-content">                       
+                        <ol>
+                            <% tasks[type].forEach(task => { %>
+                                <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
+                                    <li>
+                                        <label id="label<%= task.id %>">
+                                            <div class="left-items">
+                                                <input name="check" type="checkbox" form="update-task<%= task.id %>"
+                                                    onclick="updateTask('<%= task.id %>')" 
+                                                <% if(task.status=="done"){ %>
+                                                    checked
+                                                <% } %> ><i class="selected-item"></i>
+                                                <div class="container-task-name">
+                                                    <input class="task-name" name="taskName" id="taskName<%= task.id %>"
+                                                        value="<%= task.name %>" disabled>
+                                                </div>
                                             </div>
-                                    </div>
 
-                                    <div class="right-items">
-                                        <button type="button" id="button<%= task.id %>" class="edit-button"
-                                            onclick="editTask('<%= task.id %>')">Editar</button>
-                                        <button form="update-task<%= task.id %>" hidden type="submit">Salvar</button>
+                                            <div class="right-items">
+                                                <button type="button" id="button<%= task.id %>" class="edit-button"
+                                                    onclick="editTask('<%= task.id %>')">Editar</button>
+                                                <button form="update-task<%= task.id %>" hidden
+                                                    type="submit">Salvar</button>
 
-                                        <button class="delete-button" type="submit"
-                                            form="delete-task<%= task.id %>"></button>
-                                    </div>
-                                </label>
-                            </li>
-                        </form>
-                        <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>"></form>
-                        <% }) %>
-                </ul>
-            </div>
-            <form id="form-new-task" action="/toDo" method="POST">
-                <input name="name" id="input-new-task" type="text" class="tdl-new"
-                    placeholder="Digite sua tarefa e aperte enter.">
-            </form>
-        </div>
-        
-        <div class="to-do-painel">
-            <h2>Fazendo</h2>
-            <div class="tdl-content">
-                <ul>
-                    <% doing.forEach(task=> { %>
-                        <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
-                            <li>
-                                <label id="label<%= task.id %>">
-                                    <div class="left-items">
-                                        <input name="check" type="checkbox" form="update-task<%= task.id %>"
-                                            onclick="updateTask('<%= task.id %>')" <% if(task.status=="done"){ %>
-                                        checked
-                                        <% } %> ><i class="selected-item"></i>
-                                            <div class="container-task-name">
-                                                <input class="task-name" name="taskName" id="taskName<%= task.id %>"
-                                                    value="<%= task.name %>" disabled>
+                                                <button class="delete-button" type="submit"
+                                                    form="delete-task<%= task.id %>"></button>
                                             </div>
-                                    </div>
-
-                                    <div class="right-items">
-                                        <button type="button" id="button<%= task.id %>" class="edit-button"
-                                            onclick="editTask('<%= task.id %>')">Editar</button>
-                                        <button form="update-task<%= task.id %>" hidden type="submit">Salvar</button>
-
-                                        <button class="delete-button" type="submit"
-                                            form="delete-task<%= task.id %>"></button>
-                                    </div>
-                                </label>
-                            </li>
-                        </form>
-                        <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>"></form>
-                        <% }) %>
-                </ul>
-            </div>
-            <form id="form-new-task" action="/doing" method="POST">
-                <input name="name" id="input-new-task" type="text" class="tdl-new"
-                    placeholder="Digite sua tarefa e aperte enter.">
-            </form>
-        </div>
-
-        <div class="to-do-painel">
-            <h2>Feito</h2>
-            <div class="tdl-content">
-                <ul>
-                    <% done.forEach(task=> { %>
-                        <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
-                            <li>
-                                <label id="label<%= task.id %>">
-                                    <div class="left-items">
-                                        <input name="check" type="checkbox" form="update-task<%= task.id %>"
-                                            onclick="updateTask('<%= task.id %>')" <% if(task.status=="done"){ %>
-                                        checked
-                                        <% } %> ><i class="selected-item"></i>
-                                            <div class="container-task-name">
-                                                <input class="task-name" name="taskName" id="taskName<%= task.id %>"
-                                                    value="<%= task.name %>" disabled>
-                                            </div>
-                                    </div>
-
-                                    <div class="right-items">
-                                        <button type="button" id="button<%= task.id %>" class="edit-button"
-                                            onclick="editTask('<%= task.id %>')">Editar</button>
-                                        <button form="update-task<%= task.id %>" hidden type="submit">Salvar</button>
-
-                                        <button class="delete-button" type="submit"
-                                            form="delete-task<%= task.id %>"></button>
-                                    </div>
-                                </label>
-                            </li>
-                        </form>
-                        <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>"></form>
-                        <% }) %>
-                </ul>
-            </div>
-            <form id="form-new-task" action="/done" method="POST">
-                <input name="name" id="input-new-task" type="text" class="tdl-new"
-                    placeholder="Digite sua tarefa e aperte enter.">
-            </form>
-        </div>
+                                        </label>
+                                    </li>
+                                </form>
+                                <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>">
+                                </form>
+                            <% }) %>
+                        </ol>                        
+                    </div>
+                    <form id="form-new-task" action="/<%= type %>" method="POST">
+                        <input name="name" id="input-new-task" type="text" class="tdl-new"
+                            placeholder="Digite sua tarefa e aperte enter.">
+                    </form>
+                </div>
+        <% }) %>
     </div>
 </body>
 

@@ -4,9 +4,10 @@ module.exports = {
     async index(req, res){
         const tasks = await Task.get();
 
-        const taskPerType = Task.taskPerType(tasks);
+        const tasksPerType = Task.taskPerType(tasks);
+        const listOfTypes = Object.keys(tasksPerType);
 
-        res.render("index", {toDo : taskPerType["toDo"], doing : taskPerType["doing"], done : taskPerType["done"]});
+        res.render("index", {types : listOfTypes, tasks : tasksPerType});
     },
 
     async create(req, res){
@@ -33,14 +34,15 @@ module.exports = {
         const taskId = req.params.id;
       
         const task = await Task.getById(taskId);
-
         const needToAlterName = newTask.taskName;
+        
+        const clickedInTaskDone = !newTask.check && task.status === "done" && !needToAlterName;
+        const clickedInTask = newTask?.check === "on" && !needToAlterName;
+
         if(!needToAlterName){
             newTask.taskName = task.name;
         }
-        
-        const clickedInTaskDone = !newTask.check && task.status === "done";
-        const clickedInTask = newTask?.check === "on"
+
         if(clickedInTask || clickedInTaskDone){
             switch(task.status){
                 case "toDo":
