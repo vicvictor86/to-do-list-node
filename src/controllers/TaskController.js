@@ -1,4 +1,4 @@
-const Task = require("../model/Task");
+const Task = require("../model/TaskTable");
 
 module.exports = {
     async index(req, res){
@@ -23,7 +23,7 @@ module.exports = {
         await Task.create({
             name: newTask.name,
             status: status,
-            order: lastOrder + 1
+            order_task: lastOrder + 1
         });
 
         res.redirect("/");

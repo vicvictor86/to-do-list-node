@@ -1,7 +1,8 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
+const Sequelize = require('sequelize');
 
-module.exports = () => open({
-    filename: './database.sqlite',
-    driver: sqlite3.Database
+const instance = new Sequelize({
+    dialect: 'sqlite',
+    storage: 'database.sqlite'
 });
+
+module.exports = instance;
