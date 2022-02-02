@@ -58,12 +58,14 @@
                                 <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>">
                                 </form>
                             <% }) %>
-                        </ol>                        
+                            <form id="form-new-task" action="/<%= type %>" method="POST">
+                                <input name="name" id="input-new-task" type="text" class="tdl-new"
+                                    placeholder="Digite sua tarefa e aperte enter.">
+                            </form>      
+                        </ol>           
+                               
                     </div>
-                    <form id="form-new-task" action="/<%= type %>" method="POST">
-                        <input name="name" id="input-new-task" type="text" class="tdl-new"
-                            placeholder="Digite sua tarefa e aperte enter.">
-                    </form>
+                    
                 </div>
         <% }) %>
     </div>
