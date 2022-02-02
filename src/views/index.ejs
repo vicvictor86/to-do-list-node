@@ -28,7 +28,7 @@
                     <div class="tdl-content">                       
                         <ol>
                             <% tasks[type].forEach(task => { %>
-                                <form id="update-task<%= task.id %>" method="POST" action="/update/<%= task.id %>">
+                                <form id="update-task<%= task.id %>" method="POST" action="/task/update/<%= task.id %>">
                                     <li>
                                         <label id="label<%= task.id %>">
                                             <div class="left-items">
@@ -55,10 +55,10 @@
                                         </label>
                                     </li>
                                 </form>
-                                <form action="/delete/task/<%= task.id %>" method="POST" id="delete-task<%= task.id %>">
+                                <form action="/task/delete/<%= task.id %>" method="POST" id="delete-task<%= task.id %>">
                                 </form>
                             <% }) %>
-                            <form id="form-new-task" action="/<%= type %>" method="POST">
+                            <form id="form-new-task" action="/task/<%= type %>" method="POST">
                                 <input name="name" id="input-new-task" type="text" class="tdl-new"
                                     placeholder="Digite sua tarefa e aperte enter.">
                             </form>      

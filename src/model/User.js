@@ -7,26 +7,21 @@ const columns = {
         allowNull: false
     },
 
-    status: {
+    email: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    
-    order_task: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
 
-    // token_user_owner: {
-    //     type: Sequelize.STRING,
-    //     allowNull: false
-    // }
+    hash_password: {
+        type: Sequelize.STRING,
+        allowNull: false
+    }
 };
 
 const options = {
     freezeTableName: true,
-    tableName: "task",
+    tableName: "user",
     timestamps: true
 };
 
-module.exports = instance.define("task", columns, options);
+module.exports = instance.define("user", columns, options);
