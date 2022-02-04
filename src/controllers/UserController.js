@@ -1,4 +1,14 @@
 const User = require("../model/UserTable");
+const jwt = require("jsonwebtoken");
+
+function createToken(user) {
+    const payload = {
+        id: user.id
+    };
+
+    const token = jwt.sign(payload, process.env.CHAVE_JWT, { expiresIn: "30m" });
+    return token;
+}
 
 module.exports = {
     async get(req, res){
@@ -37,6 +47,8 @@ module.exports = {
     },
 
     login(req, res){
+        const token = createToken(req.user);
+        res.set("Authorization", token);
         res.status(204).send();
     }
     
