@@ -9,9 +9,7 @@ module.exports = {
 
     async create(req, res){
         const newUser = req.body;
-        //Fazer validações da senha
-        //Fazer aqui
-
+    
         const nameExists = await User.getByField("name", newUser.name);
         const emailExists = await User.getByField("email", newUser.email);
 
@@ -37,6 +35,10 @@ module.exports = {
 
         res.redirect("/");
     },
+
+    login(req, res){
+        res.status(204).send();
+    }
     
     // async update(req, res){
     //     const newTask = req.body;

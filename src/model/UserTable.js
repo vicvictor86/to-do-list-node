@@ -33,10 +33,6 @@ module.exports = {
             where : field
         });
 
-        if(!result){
-            throw new NotFound("Income");
-        }
-
         return result;
     },
 
