@@ -5,7 +5,7 @@ module.exports = {
         passport.authenticate("local", { session: false },
         (error, user, info) =>{
             if(error){
-                return res.status(500).json({ error: error });
+                return res.status(500).json({ error: error.message });
             }
 
             if(!user){
@@ -23,6 +23,7 @@ module.exports = {
             { session : false },
             (error, user, info) => {
                 if(error && error.name === "JsonWebTokenError"){
+                    
                     return res.status(401).json({ error: error.message }); 
                 }
 
@@ -37,10 +38,22 @@ module.exports = {
                 if(!user){
                     return res.status(401).json();
                 }
-
+                
                 req.user = user;
                 return next();
             }
         ) (req, res, next)
+    }, function(req,res,next){
+        return res.send({"status": error.message});
+    },
+
+    checkToken: async (req, res, next) => {
+        const token = req.cookies.token;
+        if(token !== undefined) {
+            req.headers["authorization"] = token;
+            next();
+        }else{
+            res.sendStatus(403);
+        }
     }
 }

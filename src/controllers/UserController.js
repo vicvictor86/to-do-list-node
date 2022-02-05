@@ -1,5 +1,6 @@
 const User = require("../model/UserTable");
 const jwt = require("jsonwebtoken");
+const bent = require("bent");
 
 function createToken(user) {
     const payload = {
@@ -46,10 +47,17 @@ module.exports = {
         res.redirect("/");
     },
 
+    screenLogin(req, res) {
+        res.render("login");
+    },
+
     login(req, res){
         const token = createToken(req.user);
-        res.set("Authorization", token);
-        res.status(204).send();
+        const bearerToken = "Bearer " + token;
+        
+        res.cookie("token", bearerToken, {MaxAge: 900000, httpOnly: true});
+
+        res.redirect("/");
     }
     
     // async update(req, res){
