@@ -56,6 +56,4 @@ module.exports = {
     }, function(req,res,next){
         return res.send({"status": error.message});
     },
-
-    
 }

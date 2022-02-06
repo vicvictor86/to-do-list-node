@@ -1,6 +1,9 @@
 const User = require("../model/UserTable");
 const jwt = require("jsonwebtoken");
 const blacklist = require('../redis/BlacklistController');
+
+const UserValidations = require("../validations/UserValidations");
+
 const bent = require("bent");
 
 function createToken(user) {
@@ -25,21 +28,9 @@ module.exports = {
         const nameExists = await User.getByField("name", newUser.name);
         const emailExists = await User.getByField("email", newUser.email);
 
-        if(nameExists){
-            throw new Error("O nome colocado já existe");
-        } else if(emailExists){
-            throw new Error("O email colocado já existe");
-        } else if(newUser.password === ""){
-            throw new Error("Senhas vazias não são aceitas");
-        } else if(newUser.name === ""){
-            throw new Error("Nomes vazios não são aceitas");
-        } else if(newUser.email === ""){
-            throw new Error("Email vazios não são aceitas");
-        }
-
-        if(newUser.password !== newUser.confirmPassword){
-            throw new Error("As senhas não podem ser diferente");
-        }
+        UserValidations.validateName(newUser, nameExists);
+        UserValidations.validateEmail(newUser, emailExists);
+        UserValidations.validatePassword(newUser);
 
         newUser.hash_password = await User.createHashPassword(newUser.password);
 
@@ -79,53 +70,4 @@ module.exports = {
         }
     }
     
-    // async update(req, res){
-    //     const newTask = req.body;
-    //     const taskId = req.params.id;
-      
-    //     const task = await Task.getById(taskId);
-    //     const needToAlterName = newTask.taskName;
-        
-    //     const clickedInTaskDone = !newTask.check && task.status === "done" && !needToAlterName;
-    //     const clickedInTask = newTask?.check === "on" && !needToAlterName;
-
-    //     if(!needToAlterName){
-    //         newTask.taskName = task.name;
-    //     }
-
-    //     if(clickedInTask || clickedInTaskDone){
-    //         switch(task.status){
-    //             case "toDo":
-    //                 newTask.status = "doing";
-    //                 break;
-    //             case "doing":
-    //                 newTask.status = "done";
-    //                 break;
-    //             case "done":
-    //                 await Task.delete(taskId);
-    //                 return res.redirect("/");
-    //             default:
-    //                 newTask.status = task.status;
-    //                 break;
-    //         }
-    //     }else{
-    //         newTask.status = task.status;
-    //     }
-
-    //     await Task.update({
-    //         id: taskId,
-    //         name: newTask.taskName,
-    //         status: newTask.status
-    //     }); 
-    
-    //     res.redirect("/");
-    // },
-
-    // async delete(req, res){
-    //     const taskId = req.params.id;
-    //     await Task.delete(taskId);
-    //     res.redirect("/");
-    // }
-
-
 }
