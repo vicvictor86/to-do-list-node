@@ -1,9 +1,15 @@
 const Task = require("../model/TaskTable");
+const jwt = require("jsonwebtoken");
+
+function getUserId(req, res){
+    const token = (req.cookies.token).split(" ")[1];
+    const payload = jwt.verify(token, process.env.CHAVE_JWT);
+    return payload.id;
+}
 
 module.exports = {
     async index(req, res){
-        const tasks = await Task.get();
-
+        const tasks = await Task.getUsersTasks(getUserId(req, res));
         const tasksPerType = Task.taskPerType(tasks);
         const listOfTypes = Object.keys(tasksPerType);
 
@@ -20,13 +26,23 @@ module.exports = {
         const taskPerTypeLength = taskPerType[status].length;
         const lastOrder = taskPerType[status][taskPerTypeLength - 1]?.order_task || 0;
 
-        await Task.create({
-            name: newTask.name,
-            status: status,
-            order_task: lastOrder + 1
-        });
-
-        res.redirect("/");
+        try{
+            const userId = getUserId(req, res);
+            await Task.create({
+                name: newTask.name,
+                status: status,
+                order_task: lastOrder + 1, 
+                userId: userId
+            });
+    
+            res.redirect("/");
+        }catch(error){
+            if(error.name === "TokenExpiredError"){
+                return res.redirect("/login");
+            }else{
+                console.log(error);
+            }
+        }
     },
 
     async update(req, res){

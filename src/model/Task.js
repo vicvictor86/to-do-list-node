@@ -17,10 +17,10 @@ const columns = {
         allowNull: false
     },
 
-    // token_user_owner: {
-    //     type: Sequelize.STRING,
-    //     allowNull: false
-    // }
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
 };
 
 const options = {

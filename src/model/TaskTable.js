@@ -8,6 +8,16 @@ module.exports = {
         return await Model.findAll({ raw : true });
     },
 
+    async getUsersTasks(userId){
+        const results = await Model.findAll({
+            where : {
+                userId : userId
+            }
+        });
+
+        return results;
+    },
+
     async getById(id){
         const result = await Model.findOne({
             where : {
@@ -23,7 +33,8 @@ module.exports = {
     },
 
     async create(newTask){
-        return await Model.create(newTask);
+        const task = await Model.create(newTask);
+        return task;
     },
 
     async update(taskUpdated){
