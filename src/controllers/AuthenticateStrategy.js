@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
+const blacklist = require('../redis/BlacklistController');
 
 const User = require("../model/UserTable");
 
@@ -12,6 +13,13 @@ function verifyUser(user){
         throw new Error("User with this email not found");
     };
 };
+
+async function verifyBlacklistToken(token){
+    const blacklistToken = await blacklist.hasToken(token);
+    if(blacklistToken){
+        throw new jwt.JsonWebTokenError("Invalid token by logout!");
+    }
+}
 
 async function verifyPassword(password, hashPassword){
     const validPassword = await bcrypt.compare(password, hashPassword);
@@ -42,9 +50,10 @@ passport.use(
     new BearerStrategy(
         async (token, done) => {
             try{
+                await verifyBlacklistToken(token);
                 const payload = jwt.verify(token, process.env.CHAVE_JWT);
                 const user = await User.getById(payload.id);
-                done(null, user);
+                done(null, user, { token : token });
             } catch(error){
                 done(error);
             }

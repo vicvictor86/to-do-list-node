@@ -1,4 +1,5 @@
 require("dotenv").config();
+require('./redis/blacklist');
 
 const express = require("express");
 const path = require("path");

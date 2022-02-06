@@ -1,5 +1,6 @@
 const User = require("../model/UserTable");
 const jwt = require("jsonwebtoken");
+const blacklist = require('../redis/BlacklistController');
 const bent = require("bent");
 
 function createToken(user) {
@@ -54,10 +55,20 @@ module.exports = {
     login(req, res){
         const token = createToken(req.user);
         const bearerToken = "Bearer " + token;
-        
+        console.log(bearerToken);
         res.cookie("token", bearerToken, {MaxAge: 900000, httpOnly: true});
 
         res.redirect("/");
+    },
+
+    async logout(req, res){
+        try{
+            const token = req.token;
+            await blacklist.insert(token);
+            res.redirect("/login");
+        }catch(erro){
+            res.status(500).json({erro: erro.message});
+        }
     }
     
     // async update(req, res){

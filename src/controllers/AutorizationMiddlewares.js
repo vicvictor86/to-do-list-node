@@ -1,5 +1,14 @@
 const passport = require('passport');
 
+function checkToken(req, res){
+    const token = req.cookies.token;
+    if(token !== undefined) {
+        req.headers["authorization"] = token;
+    }else{
+        res.sendStatus(403);
+    }
+}
+
 module.exports = {
     local: (req, res, next) =>{
         passport.authenticate("local", { session: false },
@@ -18,12 +27,12 @@ module.exports = {
     },
 
     bearer: (req, res, next) => {
+        checkToken(req, res);
         passport.authenticate(
             'bearer',
             { session : false },
             (error, user, info) => {
                 if(error && error.name === "JsonWebTokenError"){
-                    
                     return res.status(401).json({ error: error.message }); 
                 }
 
@@ -39,6 +48,7 @@ module.exports = {
                     return res.status(401).json();
                 }
                 
+                req.token = info.token;
                 req.user = user;
                 return next();
             }
@@ -47,13 +57,5 @@ module.exports = {
         return res.send({"status": error.message});
     },
 
-    checkToken: async (req, res, next) => {
-        const token = req.cookies.token;
-        if(token !== undefined) {
-            req.headers["authorization"] = token;
-            next();
-        }else{
-            res.sendStatus(403);
-        }
-    }
+    
 }

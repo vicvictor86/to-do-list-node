@@ -14,6 +14,9 @@
 <body>
     <header>
         <h1>Lista de afazeres - Node</h1>
+        <div class="logout-container">
+            <a id="logout" href="/user/logout">Sair</a>
+        </div>
     </header>
     <div class="tdl-holder">
         <% types.forEach(type => { %>
@@ -58,7 +61,7 @@
                                 <form action="/task/delete/<%= task.id %>" method="POST" id="delete-task<%= task.id %>">
                                 </form>
                             <% }) %>
-                            <form id="form-new-task" action="/task/<%= type %>" method="POST">
+                            <form id="form-new-task" action="/task/create/<%= type %>" method="POST">
                                 <input name="name" id="input-new-task" type="text" class="tdl-new"
                                     placeholder="Digite sua tarefa e aperte enter.">
                             </form>      

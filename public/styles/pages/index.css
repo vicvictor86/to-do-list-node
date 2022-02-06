@@ -17,15 +17,28 @@ body{
 header {
 	display: flex;
 	justify-content: center;
+	position: relative;
 	align-items: center;
 	background-color: #284eda;
 	height: 60px;
 	margin-bottom: 64px;
 }
 
-h1 {
+header h1 {
+	box-sizing: border-box;
 	font-size: 3rem;
 	color: whitesmoke;
+}
+
+#logout {
+	box-sizing: border-box;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #fff;
+	text-decoration: none;
+	position: absolute;
+	right: 5%;
+	bottom: 27%;
 }
 
 .tdl-holder{
