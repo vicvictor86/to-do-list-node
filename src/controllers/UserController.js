@@ -37,6 +37,10 @@ module.exports = {
             throw new Error("Email vazios não são aceitas");
         }
 
+        if(newUser.password !== newUser.confirmPassword){
+            throw new Error("As senhas não podem ser diferente");
+        }
+
         newUser.hash_password = await User.createHashPassword(newUser.password);
 
         await User.create({
@@ -45,11 +49,15 @@ module.exports = {
             hash_password: newUser.hash_password
         });
 
-        res.redirect("/");
+        res.redirect("/login");
     },
 
     screenLogin(req, res) {
         res.render("login");
+    },
+
+    screenSignUp(req, res){
+        res.render("signup");
     },
 
     login(req, res){
